@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>Tracking System</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+
+<body>
+    <p id="demo"></p>
+    <script>
+        var socket = io.connect('http://localhost:1000');
+        var geo, target, options;
+        var demo = document.getElementById("demo");
+
+        function success(pos) {
+            var crd = pos.coords;
+            var lati = crd.latitude;
+            var longi = crd.longitude;
+            //  if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+            //    console.log('Congratulations, you reached the target');
+            //navigator.geolocation.clearWatch(geo);
+            //  }
+            //            demo.innerHTML = "latitude = " + crd.latitude + "\nlongitude" + crd.longitude;
+            var trackeeobj = {
+                latitude: crd.latitude
+                , longitude: crd.longitude
+                , name: "Anuj"
+            }
+            socket.emit('send', trackeeobj);
+        }
+
+        function error(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+        }
+        //target = {
+        //  latitude : 0,
+        //  longitude: 0
+        //};
+        options = {
+            enableHighAccuracy: false
+            , timeout: 5000
+            , maximumAge: 0
+        };
+        geo = navigator.geolocation.watchPosition(success, error, options);
+        console.log(geo);
+    </script>
+</body>
+
+</html>
